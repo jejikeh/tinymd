@@ -1,21 +1,26 @@
 #include <iostream>
 
-static void close_tag(std::string *temp, std::string *result) {
-  if (temp[0] == "") {
-    temp[0] = "<p>";
-    temp[2] = "</p>";
+#define OPEN_TAG 0
+#define CONTENT 1
+#define CLOSE_TAG 2
+
+static void close_tag(std::string *current_tag, std::string *result) {
+  if (current_tag[OPEN_TAG] == "") {
+    current_tag[OPEN_TAG] = "<p>";
+    current_tag[CLOSE_TAG] = "</p>";
   }
 
-  result->append(temp[0] + temp[1] + temp[2] + "\n");
+  result->append(current_tag[OPEN_TAG] + current_tag[CONTENT] +
+                 current_tag[CLOSE_TAG] + "\n");
 
-  temp[0] = "";
-  temp[1] = "";
-  temp[2] = "";
+  current_tag[OPEN_TAG] = "";
+  current_tag[CONTENT] = "";
+  current_tag[CLOSE_TAG] = "";
 }
 
 static std::string parse_raw_string(const std::string &content) {
   std::string result;
-  std::string temp[3] = {"", "", ""};
+  std::string current_tag[3] = {"", "", ""};
   // @Incomplete(jejikeh): maybe i can use std::format here, to just replace the
   // 3 arrays. Then i could handle 'children' situations, maybe?
 
@@ -27,34 +32,34 @@ static std::string parse_raw_string(const std::string &content) {
         heading_level++;
       }
 
-      temp[0] = "<h" + std::to_string(heading_level) + ">";
-      temp[2] = "</h" + std::to_string(heading_level) + ">";
+      current_tag[OPEN_TAG] = "<h" + std::to_string(heading_level) + ">";
+      current_tag[CLOSE_TAG] = "</h" + std::to_string(heading_level) + ">";
     }
 
     if (content[i] == '*') {
       if (i + 1 < content.size() && content[i + 1] != ' ') {
-        temp[1] += "<em>";
+        current_tag[CONTENT] += "<em>";
         i++;
 
         while (i < content.size() && content[i] != '*') {
-          temp[1] += content[i];
+          current_tag[CONTENT] += content[i];
           i++;
         }
 
-        temp[1] += "</em>";
+        current_tag[CONTENT] += "</em>";
         i++;
       }
     }
 
     if (content[i] == '\n') {
-      close_tag(temp, &result);
+      close_tag(current_tag, &result);
       continue;
     }
 
-    temp[1] += content[i];
+    current_tag[CONTENT] += content[i];
   }
 
-  close_tag(temp, &result);
+  close_tag(current_tag, &result);
 
   return result;
 }
