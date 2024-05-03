@@ -4,7 +4,9 @@
 #define CONTENT 1
 #define CLOSE_TAG 2
 
-static void close_tag(std::string *current_tag, std::string *result) {
+typedef std::string tag[3];
+
+static void close_tag(tag current_tag, std::string *result) {
   if (current_tag[OPEN_TAG] == "") {
     current_tag[OPEN_TAG] = "<p>";
     current_tag[CLOSE_TAG] = "</p>";
@@ -20,7 +22,7 @@ static void close_tag(std::string *current_tag, std::string *result) {
 
 static std::string parse_raw_string(const std::string &content) {
   std::string result;
-  std::string current_tag[3] = {"", "", ""};
+  tag current_tag = {"", "", ""};
   // @Incomplete(jejikeh): maybe i can use std::format here, to just replace the
   // 3 arrays. Then i could handle 'children' situations, maybe?
 
