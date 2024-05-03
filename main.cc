@@ -33,7 +33,7 @@ static std::string parse_raw_string(const std::string &content) {
 
     if (content[i] == '*') {
       if (i + 1 < content.size() && content[i + 1] != ' ') {
-        temp[1] += " <em>";
+        temp[1] += "<em>";
         i++;
 
         while (i < content.size() && content[i] != '*') {
@@ -41,14 +41,14 @@ static std::string parse_raw_string(const std::string &content) {
           i++;
         }
 
-        temp[1] = "</em> ";
+        temp[1] += "</em>";
         i++;
       }
     }
 
     if (content[i] == '\n') {
       close_tag(temp, &result);
-      i++;
+      continue;
     }
 
     temp[1] += content[i];
@@ -60,7 +60,7 @@ static std::string parse_raw_string(const std::string &content) {
 }
 
 int main() {
-  const std::string result = parse_raw_string("*hello*");
+  const std::string result = parse_raw_string("\n*huh*?");
 
   std::cout << result << std::endl;
 
