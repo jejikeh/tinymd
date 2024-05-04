@@ -57,6 +57,8 @@ static std::string render_html(const std::string& content) {
                 current_tag[CONTENT] += "</em>";
                 i++;
             }
+
+            continue;
         }
 
         if (content[i] == '`') {
@@ -78,9 +80,12 @@ static std::string render_html(const std::string& content) {
             }
 
             i += 3;
+
+            continue;
         }
 
         if (content[i] == '[') {
+            close_tag(current_tag, &result);
             current_tag[OPEN_TAG] = "<a href=\"";
             i++;
             while (content[i] != ']') {
@@ -96,6 +101,10 @@ static std::string render_html(const std::string& content) {
 
             current_tag[OPEN_TAG] += "\">";
             current_tag[CLOSE_TAG] = "</a>";
+
+            close_tag(current_tag, &result);
+
+            continue;
         }
 
         if (content[i] == '\n') {
