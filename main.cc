@@ -101,7 +101,6 @@ static std::string render_html(const std::string& content) {
                 link_url += content[i];
                 i++;
             }
-            i++;
 
             current_tag[CONTENT] += link_url + "\">" + link_text + "</a> ";
 
