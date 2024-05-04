@@ -1,5 +1,3 @@
-# retire
+# tinymd
 
-retire - simple static .html file generator
-
-_ddf_
+tinymd - simple markdown compiler.
