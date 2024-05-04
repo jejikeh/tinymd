@@ -46,7 +46,7 @@ static std::string render_html(const std::string& content) {
 
         if (content[i] == '*') {
             if (i + 1 < content.size() && content[i + 1] != ' ') {
-                current_tag[CONTENT] += "<em>";
+                current_tag[CONTENT] += " <em>";
                 i++;
 
                 while (i < content.size() && content[i] != '*') {
@@ -54,7 +54,7 @@ static std::string render_html(const std::string& content) {
                     i++;
                 }
 
-                current_tag[CONTENT] += "</em>";
+                current_tag[CONTENT] += "</em> ";
                 i++;
             }
 
@@ -62,6 +62,8 @@ static std::string render_html(const std::string& content) {
         }
 
         if (content[i] == '`') {
+            close_tag(current_tag, &result);
+
             if (i + 2 >= content.size() || content[i + 1] != '`' ||
                 content[i + 2] != '`') {
                 continue;
@@ -81,28 +83,27 @@ static std::string render_html(const std::string& content) {
 
             i += 3;
 
+            close_tag(current_tag, &result);
+
             continue;
         }
 
         if (content[i] == '[') {
-            close_tag(current_tag, &result);
-            current_tag[OPEN_TAG] = "<a href=\"";
+            std::string link_text, link_url = "";
+            current_tag[CONTENT] = " <a href=\"";
             i++;
             while (content[i] != ']') {
-                current_tag[CONTENT] += content[i];
+                link_text += content[i];
                 i++;
             }
             i += 2;
             while (content[i] != ')') {
-                current_tag[OPEN_TAG] += content[i];
+                link_url += content[i];
                 i++;
             }
             i++;
 
-            current_tag[OPEN_TAG] += "\">";
-            current_tag[CLOSE_TAG] = "</a>";
-
-            close_tag(current_tag, &result);
+            current_tag[CONTENT] += link_url + "\">" + link_text + "</a> ";
 
             continue;
         }
