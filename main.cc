@@ -90,7 +90,7 @@ static std::string render_html(const std::string& content) {
 
         if (content[i] == '[') {
             std::string link_text, link_url = "";
-            current_tag[CONTENT] += " <a href=\"";
+            current_tag[CONTENT] += "<a href=\"";
             i++;
             while (content[i] != ']') {
                 link_text += content[i];
@@ -102,7 +102,7 @@ static std::string render_html(const std::string& content) {
                 i++;
             }
 
-            current_tag[CONTENT] += link_url + "\">" + link_text + "</a> ";
+            current_tag[CONTENT] += link_url + "\">" + link_text + "</a>";
 
             continue;
         }
