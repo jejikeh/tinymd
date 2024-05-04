@@ -80,6 +80,24 @@ static std::string render_html(const std::string& content) {
             i += 3;
         }
 
+        if (content[i] == '[') {
+            current_tag[OPEN_TAG] = "<a href=\"";
+            i++;
+            while (content[i] != ']') {
+                current_tag[CONTENT] += content[i];
+                i++;
+            }
+            i += 2;
+            while (content[i] != ')') {
+                current_tag[OPEN_TAG] += content[i];
+                i++;
+            }
+            i++;
+
+            current_tag[OPEN_TAG] += "\">";
+            current_tag[CLOSE_TAG] = "</a>";
+        }
+
         if (content[i] == '\n') {
             close_tag(current_tag, &result);
             continue;
